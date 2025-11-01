@@ -47,4 +47,20 @@ Quy trình triển khai:
   $ cd ~Qt_libs  
   $ ./deploy #running file deploy  
 
+# Cấu trúc chương trình:
+tcp_sensor_system/  
+├── tcp_sensor_system.pro  
+├── main.cpp  
+├── server/  
+│   ├── TcpServer.h  
+│   ├── TcpServer.cpp  
+│   ├── ClientHandler.h  
+│   ├── ClientHandler.cpp  
+│   ├── SensorDataGenerator.h  
+│   ├── SensorDataGenerator.cpp  
+└── client/  
+    ├── TcpClient.h  
+    ├── TcpClient.cpp  
+
+
 Build the system (Zturn Board V2, Zynq 7000) with petalinux Tools based on Yocto using available xsa files to create projects, configure kernel, build images, patch drivers, device trees and create boot files. Then, a program was written to implement server-client data transmission (multi-client) using TCP/IP and C++ to simulate the embedded board acting as a server providing information about range angle, direction angle, temperature, humidity to the client. The data is generated using a random data retrieval function with upper and lower bounds. The client side sends requests to the server to get the above information at a frequency of 600Hz, with each request from the client the server returns a value of the information. Then it was expanded and deployed into a Qt program using inter-process communications (IPC).
