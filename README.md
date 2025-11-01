@@ -62,5 +62,9 @@ tcp_sensor_system/
     ├── TcpClient.h  
     ├── TcpClient.cpp  
 
+# Nhiệm vụ tổng thể
+server: mô phỏng board nhúng (Zynq) đóng vai trò server TCP/IP cung cấp các dữ liệu về cảm biến  
+client: Mô phỏng máy host gửi request để nhận dữ liệu  
+
 
 Build the system (Zturn Board V2, Zynq 7000) with petalinux Tools based on Yocto using available xsa files to create projects, configure kernel, build images, patch drivers, device trees and create boot files. Then, a program was written to implement server-client data transmission (multi-client) using TCP/IP and C++ to simulate the embedded board acting as a server providing information about range angle, direction angle, temperature, humidity to the client. The data is generated using a random data retrieval function with upper and lower bounds. The client side sends requests to the server to get the above information at a frequency of 600Hz, with each request from the client the server returns a value of the information. Then it was expanded and deployed into a Qt program using inter-process communications (IPC).
