@@ -2,7 +2,7 @@
 Hệ thống được xây dựng trên bo mạch Zturn Board V2 (Zynq-7000) bằng PetaLinux Tools dựa trên Yocto Project, sử dụng tệp .xsa sẵn có để tạo project, config kernel, build image, patch driver, device tree và tạo boot file.  
 Sau khi hoàn tất hệ thống nhúng, triển khai chương trình C++ được phát triển để mô phỏng cơ chế truyền dữ liệu dạng server–client đa kết nối (multi-client) thông qua giao thức TCP/IP trên kết nối Ethernet. Trong mô hình này, bo mạch nhúng đóng vai trò server, cung cấp các thông tin gồm góc phương vị (range angle), góc hướng (direction angle), nhiệt độ và độ ẩm cho client. Dữ liệu được sinh ngẫu nhiên trong giới hạn trên–dưới định sẵn bằng hàm tạo dữ liệu giả lập. Phía client sẽ gửi yêu cầu đến server với tần số 600Hz, và mỗi lần yêu cầu, server phản hồi lại một bộ giá trị thông tin tương ứng. Hệ thống đảm bảo khả năng phản hồi liên tục và chính xác với tần số cao, phản ánh hoạt động thời gian thực của ứng dụng nhúng. Tiếp theo, chương trình mở rộng và triển khai thành ứng dụng Qt, ứng dụng cơ chế giao tiếp liên tiến trình (IPC – Inter-Process Communication) để quản lý trao đổi dữ liệu giữa các tiến trình trong cùng hệ thống, giúp tối ưu hiệu năng, tăng tính linh hoạt và khả năng mở rộng cho việc phát triển các ứng dụng nhúng phức tạp hơn dựa trên nền tảng Zynq–7000.  
 
-Quy trình triển khai:  
+# Quy trình triển khai:  
 
 1. Create Petalinux Project (tạo skeleton base FPGA-disgned)  
 2. System Configuration (Configure Kernel, RootFS, Device Tree)  
