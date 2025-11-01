@@ -11,9 +11,10 @@ Quy trình triển khai:
    2.3. Add libs (Qt libs).  
 3. System Build Process (Build System Image)  
    -> Yocto thực hiện Bitbake để compile Kernel, U-Boot, rootfs, device tree  
-   >> Tạo các file BOOT.BIN (chứa FSBL, bitstream, U-Boot)  
-   >>              image.ub (kernel + device tree + rootfs)  
-   >>              rootfs.tar.gz  
+   >> Tạo các file:  
+   >> BOOT.BIN (chứa FSBL, bitstream, U-Boot)  
+   >> image.ub (kernel + device tree + rootfs)  
+   >> rootfs.tar.gz  
 4. Boot Image Packaging (Create Boot Files & Package)  
    $ petalinux-package --boot --fsbl images/linux/zynq_fsbl.elf \  
                   --u-boot images/linux/u-boot.elf \  
