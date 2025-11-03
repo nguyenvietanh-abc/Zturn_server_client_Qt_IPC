@@ -62,7 +62,7 @@ tcp_sensor_system/
     ├── TcpClient.h  
     ├── TcpClient.cpp  
 
-# Nhiệm vụ tổng thể
+# Tổng quát
 server: mô phỏng board nhúng (Zynq) đóng vai trò server TCP/IP cung cấp các dữ liệu về cảm biến  
 client: Mô phỏng máy host gửi request để nhận dữ liệu  
 
