@@ -45,7 +45,10 @@ void TcpClient::onReadyRead()
     }
 }
 
-void TcpClient::onError(QAbstractSocket::SocketError error)
+void TcpClient::onError(QAbstractSocket::SocketError socketError)
 {
-    qCritical() << "Client error:" << m_socket.errorString();
+    qCritical() << "Client error (code:" << static_cast<int>(socketError) << "):" << m_socket.errorString();
+        m_timer.stop();  // Dừng timer nếu lỗi, tránh spam request
+        // Optional: reconnect logic (senior style)
+        // QTimer::singleShot(5000, this, &TcpClient::start);  // Retry sau 5s
 }

@@ -4,10 +4,10 @@
 #include <QTcpSocket>
 
 TcpServer::TcpServer(QObject *parent)
-    : QTcpServer(parent)
+    : QTcpServer(static_cast<QObject*>(parent))             // Cast explicit cho base
 {
     m_generator = std::make_shared<SensorDataGenerator>(this);
-    m_generator->startGenerating(1); // 1000Hz
+    m_generator->startGenerating(1);                        // 1000Hz
 }
 
 TcpServer::~TcpServer() = default;
@@ -30,7 +30,9 @@ void TcpServer::incomingConnection(qintptr socketDescriptor)
         clientSocket->deleteLater();
         return;
     }
-
-    new ClientHandler(m_generator, clientSocket, this);
-    qInfo() << "Client connected:" << clientSocket->peerAddress().toString();
-}
+    // connect(clientSocket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error),
+                //this, [](QAbstractSocket::SocketError err) { qDebug() << "Error:" << err; });
+    // gọi theo thứ tự - generator, socket, parent (this)
+    new ClientHandler(m_generator, clientSocket, this);         // Gọi handler
+        qInfo() << "Client connected:" << clientSocket->peerAddress().toString();
+    }
