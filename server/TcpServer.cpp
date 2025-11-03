@@ -1,29 +1,36 @@
+// server/TcpServer.cpp
 #include "TcpServer.h"
+#include "ClientHandler.h"
 #include <QTcpSocket>
-#include <QDebug>
 
 TcpServer::TcpServer(QObject *parent)
     : QTcpServer(parent)
 {
+    m_generator = std::make_shared<SensorDataGenerator>(this);
+    m_generator->startGenerating(1); // 1000Hz
 }
 
-bool TcpServer::start(quint16 port)
+TcpServer::~TcpServer() = default;
+
+bool TcpServer::startServer(quint16 port)
 {
-    if (!listen(QHostAddress::Any, port))
-    {
-        qCritical() << "Server failed to start on port" << port;
+    if (!this->listen(QHostAddress::Any, port)) {
+        qCritical() << "Server failed:" << this->errorString();
         return false;
     }
-    qInfo() << "Server listening on port" << port;
+    qInfo() << "Server started on port" << port;
     return true;
 }
 
 void TcpServer::incomingConnection(qintptr socketDescriptor)
 {
     QTcpSocket *clientSocket = new QTcpSocket(this);
-    clientSocket->setSocketDescriptor(socketDescriptor);
-    qInfo() << "New client connected from" << clientSocket->peerAddress().toString();
+    if (!clientSocket->setSocketDescriptor(socketDescriptor)) {
+        qWarning() << "Invalid socket descriptor";
+        clientSocket->deleteLater();
+        return;
+    }
 
-    ClientHandler *handler = new ClientHandler(clientSocket, this);
-    connect(clientSocket, &QTcpSocket::disconnected, handler, &ClientHandler::deleteLater);
+    new ClientHandler(m_generator, clientSocket, this);
+    qInfo() << "Client connected:" << clientSocket->peerAddress().toString();
 }
