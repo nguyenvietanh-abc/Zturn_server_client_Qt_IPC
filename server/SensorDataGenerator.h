@@ -2,6 +2,9 @@
 #define SENSORDATAGENERATOR_H
 
 #include <QObject>
+#include <QTimer>
+#incldue <QMutex>
+#include <random>
 #include <QRandomGenerator>
 
 class SensorDataGenerator : public QObject
