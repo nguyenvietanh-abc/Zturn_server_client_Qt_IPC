@@ -1,3 +1,4 @@
+# tcp_sensor_system.pro
 QT += core network
 CONFIG += console c++17
 CONFIG -= app_bundle
@@ -14,4 +15,5 @@ HEADERS += \
     server/TcpServer.h \
     server/ClientHandler.h \
     server/SensorDataGenerator.h \
+    server/SensorData.h \
     client/TcpClient.h
