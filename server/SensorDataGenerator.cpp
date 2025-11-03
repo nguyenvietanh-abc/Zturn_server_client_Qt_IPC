@@ -14,29 +14,34 @@ SensorDataGenerator::SensorDataGenerator(QObject *parent)
     connect(m_timer, &QTimer::timeout, this, &SensorDataGenerator::generateNewData);
 }
 
-double SensorDataGenerator::generateValue(double min, double max) const
+SensorDataGenerator::~SensorDataGenerator()
 {
-    //tránh lỗi ambiguous
-    std::uniform_real_distribution<double> dist(min,max);
-    return dist(*QRandomGenerator::global());
+    stopGenerating();
 }
 
-double SensorDataGenerator::getPitch() const
+void SensorDataGenerator::startGenerating(int intervalMs)
 {
-    return generateValue(-90.0, 90.0);
+    if (m_timer->isActive()) return;
+    m_timer->start(intervalMs);
 }
 
-double SensorDataGenerator::getYaw() const
+void SensorDataGenerator::stopGenerating()
 {
-    return generateValue(0.0, 360.0);
+    m_timer->stop();
 }
 
-double SensorDataGenerator::getTemperature() const
+void SensorDataGenerator::generateNewData()
 {
-    return generateValue(15.0, 35.0);
+    QMutexLocker locker(&m_mutex);
+    m_currentData.pitch = m_distPitch(m_rng);
+    m_currentData.yaw = m_distYaw(m_rng);
+    m_currentData.temperature = m_distTemp(m_rng);
+    m_currentData.humidity = m_distHum(m_rng);
 }
 
-double SensorDataGenerator::getHumidity() const
+SensorData SensorDataGenerator::currentData() const
 {
-    return generateValue(30.0, 90.0);
+    QMutexLocker locker(&m_mutex);
+    return m_currentData;
 }
+
