@@ -1,42 +1,51 @@
+// client/TcpClient.cpp
 #include "TcpClient.h"
-#include <QDebug>
 #include <QJsonDocument>
-#include <QJsonObject>
+#include <QDebug>
 
 TcpClient::TcpClient(const QString &host, quint16 port, QObject *parent)
-    : QObject(parent), host(host), port(port)
+    : QObject(parent)
+    , m_host(host)
+    , m_port(port)
 {
-    connect(&socket, &QTcpSocket::connected, this, &TcpClient::onConnected);
-    connect(&socket, &QTcpSocket::readyRead, this, &TcpClient::onReadyRead);
-    connect(&timer, &QTimer::timeout, this, &TcpClient::sendRequest);
+    connect(&m_socket, &QTcpSocket::connected, this, &TcpClient::onConnected);
+    connect(&m_socket, &QTcpSocket::readyRead, this, &TcpClient::onReadyRead);
+    connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::errorOccurred),
+            this, &TcpClient::onError);
+    connect(&m_timer, &QTimer::timeout, this, &TcpClient::sendRequest);
 }
 
 void TcpClient::start()
 {
-    socket.connectToHost(host, port);
+    m_socket.connectToHost(m_host, m_port);
 }
 
 void TcpClient::onConnected()
 {
     qInfo() << "Connected to server.";
-    timer.start(1000 / 600); // 600Hz
+    m_timer.start(1000 / 600); // ~1.666ms → 600Hz
 }
 
 void TcpClient::sendRequest()
 {
-    socket.write("GET_DATA\n");
-    socket.flush();
+    if (m_socket.state() == QAbstractSocket::ConnectedState) {
+        m_socket.write("GET_DATA\n");
+    }
 }
 
 void TcpClient::onReadyRead()
 {
-    QByteArray data = socket.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonObject json = doc.object();
+    while (m_socket.canReadLine()) {
+        QByteArray line = m_socket.readLine();
+        QJsonDocument doc = QJsonDocument::fromJson(line);
+        if (!doc.isNull() && doc.isObject()) {
+            SensorData data = SensorData::fromJson(doc.object());
+            emit dataReceived(data);
+        }
+    }
+}
 
-    qInfo().noquote() << QString("Pitch: %1 | Yaw: %2 | Temp: %3°C | Hum: %4%%")
-                             .arg(json["pitch"].toDouble(), 0, 'f', 2)
-                             .arg(json["yaw"].toDouble(), 0, 'f', 2)
-                             .arg(json["temperature"].toDouble(), 0, 'f', 2)
-                             .arg(json["humidity"].toDouble(), 0, 'f', 2);
+void TcpClient::onError(QAbstractSocket::SocketError error)
+{
+    qCritical() << "Client error:" << m_socket.errorString();
 }
