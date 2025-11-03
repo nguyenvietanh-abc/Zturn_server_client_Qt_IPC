@@ -4,7 +4,7 @@ Sau khi hoàn tất hệ thống nhúng, triển khai chương trình C++ đư�
 
 # Quy trình triển khai:  
 
-1. Create Petalinux Project (tạo skeleton base FPGA-disgned)  
+1. Create Petalinux Project (tạo skeleton base FPGA-disigned)  
 2. System Configuration (Configure Kernel, RootFS, Device Tree)  
    2.1. Kích hoạt driver  
    2.2. Tùy chỉnh device tree (các node phần cứng tương ứng PL/PS)  
