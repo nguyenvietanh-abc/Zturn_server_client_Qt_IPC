@@ -5,7 +5,8 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QTimer>
-#include "server/SensorData.h"
+#include <QAbstractSocket>          // Bổ sung: SocketError
+#include "../server/SensorData.h"    // Đường dẫn tương đối
 
 class TcpClient : public QObject
 {
@@ -21,7 +22,7 @@ private slots:
     void onConnected();
     void sendRequest();
     void onReadyRead();
-    void onError(QAbstractSocket::SocketError error);
+    void onError(QAbstractSocket::SocketError socketError); //: explicit param
 
 private:
     QTcpSocket m_socket;

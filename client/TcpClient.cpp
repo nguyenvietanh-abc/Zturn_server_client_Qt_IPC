@@ -10,8 +10,8 @@ TcpClient::TcpClient(const QString &host, quint16 port, QObject *parent)
 {
     connect(&m_socket, &QTcpSocket::connected, this, &TcpClient::onConnected);
     connect(&m_socket, &QTcpSocket::readyRead, this, &TcpClient::onReadyRead);
-    connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::errorOccurred),
-            this, &TcpClient::onError);
+    connect(&m_socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error),
+                this, &TcpClient::onError);
     connect(&m_timer, &QTimer::timeout, this, &TcpClient::sendRequest);
 }
 

@@ -6,9 +6,9 @@ SensorDataGenerator::SensorDataGenerator(QObject *parent)
     : QObject(parent)
     , m_rng(QRandomGenerator::global()->generate())
     , m_distPitch(-90.0, 90.0)
-    , m_disrYaw(0.0, 360,0)
+    , m_distYaw(0.0, 360.0)
     , m_distTemp(15.0, 35.0)
-    , m_dist_Hum(30.0, 90.0)
+    , m_distHum(30.0, 90.0)
 {
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &SensorDataGenerator::generateNewData);
